@@ -1,0 +1,2122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Settings | Digital Logbook</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+      
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --primary: #6366f1;
+        --primary-hover: #4f46e5;
+        --secondary: #ec4899;
+        --accent: #06b6d4;
+        --bg-dark: #0f172a;
+        --bg-card: rgba(30, 41, 59, 0.7);
+        --bg-glass: rgba(255, 255, 255, 0.05);
+        --text-primary: #f8fafc;
+        --text-secondary: #94a3b8;
+        --border: rgba(255, 255, 255, 0.1);
+        --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background: var(--bg-dark);
+        color: var(--text-primary);
+        min-height: 100vh;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      /* Animated Background */
+      .background-container {
+        min-height: 100vh;
+        background: 
+          radial-gradient(ellipse at top, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+          radial-gradient(ellipse at bottom right, rgba(236, 72, 153, 0.15) 0%, transparent 50%),
+          radial-gradient(ellipse at bottom left, rgba(6, 182, 212, 0.15) 0%, transparent 50%),
+          var(--bg-dark);
+        position: relative;
+      }
+
+      .background-container::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+          radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 40% 20%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* Navigation */
+      .top-navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 70px;
+        background: linear-gradient(
+          90deg,
+          rgba(10, 14, 39, 0.98) 0%,
+          rgba(26, 31, 58, 0.98) 100%
+        );
+        border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+        box-shadow: 0 8px 32px rgba(0, 212, 255, 0.2);
+        backdrop-filter: blur(10px);
+        z-index: 1000;
+        padding: 0 30px;
+      }
+
+      .nav-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 100%;
+      }
+
+      .nav-left {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .admin-info img {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid rgba(0, 212, 255, 0.35);
+        box-shadow: 0 0 18px rgba(0, 212, 255, 0.3);
+      }
+
+      .nav-title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 800;
+        background: var(--gradient-1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: block;
+        white-space: nowrap;
+      }
+
+      .nav-menu {
+        display: flex;
+        list-style: none;
+        gap: 0.5rem;
+      }
+
+      .nav-menu a {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.6rem 1.2rem;
+        color: var(--text-secondary);
+        text-decoration: none;
+        border-radius: 14px;
+        transition: all 0.25s ease;
+        font-weight: 600;
+        font-size: 0.95rem;
+        border: 1px solid transparent;
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .nav-menu a:hover {
+        background: rgba(0, 212, 255, 0.12);
+        color: var(--text-primary);
+        transform: translateY(-1px);
+        box-shadow: 0 10px 25px rgba(0, 212, 255, 0.15);
+      }
+
+      .nav-menu a.active {
+        background: linear-gradient(135deg, rgba(0, 212, 255, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+        color: var(--text-primary);
+        border: 1px solid rgba(0, 212, 255, 0.45);
+        box-shadow: 0 12px 30px rgba(0, 212, 255, 0.25);
+      }
+
+      .pending-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 18px;
+        height: 18px;
+        padding: 0 6px;
+        background: #ef4444;
+        color: white;
+        font-size: 11px;
+        font-weight: 700;
+        border-radius: 999px;
+        margin-left: 0.3rem;
+      }
+
+      .nav-menu a {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.6rem 1.2rem;
+        color: var(--text-secondary);
+        text-decoration: none;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        font-size: 0.9rem;
+      }
+
+      .nav-menu a:hover {
+        background: var(--bg-glass);
+        color: var(--text-primary);
+        transform: translateY(-2px);
+      }
+
+      .nav-menu a i {
+        font-size: 1rem;
+      }
+
+      .nav-controls {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+      }
+
+      /* Profile Button */
+      .admin-profile-btn {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        border: 2px solid var(--border);
+        background: var(--bg-glass);
+        color: var(--text-primary);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+      }
+
+      .admin-profile-btn:hover {
+        border-color: var(--primary);
+        box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+        transform: scale(1.05);
+      }
+
+      /* Profile Dropdown */
+      .admin-profile-container {
+        position: relative;
+      }
+
+      .profile-dropdown {
+        position: absolute;
+        top: 50px;
+        right: -10px;
+        background: rgba(30, 41, 59, 0.98);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1rem;
+        min-width: 260px;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: var(--shadow);
+      }
+
+      .profile-dropdown.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 0.875rem;
+        padding-bottom: 0.875rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .profile-avatar-icon {
+        font-size: 2.25rem;
+        color: var(--primary);
+      }
+
+      .profile-info h3 {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .profile-info p {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+      }
+
+      .profile-menu-item {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.7rem;
+        margin-top: 0.4rem;
+        background: transparent;
+        border: none;
+        color: var(--text-secondary);
+        cursor: pointer;
+        border-radius: 10px;
+        transition: all 0.2s;
+        font-size: 0.9rem;
+      }
+
+      .profile-menu-item:hover {
+        background: var(--bg-glass);
+        color: var(--text-primary);
+        transform: translateX(5px);
+      }
+
+      /* Mobile Menu Toggle */
+      .mobile-menu-toggle {
+        background: var(--bg-glass);
+        border: 1px solid var(--border);
+        color: var(--text-primary);
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .mobile-menu-toggle:hover {
+        background: rgba(99, 102, 241, 0.2);
+        border-color: var(--primary);
+      }
+
+      /* Mobile Menu Overlay */
+      .mobile-menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(10px);
+        z-index: 2000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s;
+      }
+
+      .mobile-menu-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .mobile-menu-content {
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 100%;
+        width: 280px;
+        background: rgba(15, 23, 42, 0.98);
+        border-left: 1px solid var(--border);
+        padding: 1.5rem;
+        transform: translateX(100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow-y: auto;
+      }
+
+      .mobile-menu-overlay.active .mobile-menu-content {
+        transform: translateX(0);
+      }
+
+      .mobile-menu-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .mobile-menu-header h3 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        background: var(--gradient-1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .mobile-menu-close {
+        background: var(--bg-glass);
+        border: 1px solid var(--border);
+        color: var(--text-primary);
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .mobile-menu-close:hover {
+        background: rgba(239, 68, 68, 0.2);
+        border-color: rgba(239, 68, 68, 0.5);
+        color: #ef4444;
+      }
+
+      .mobile-nav-menu {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .mobile-nav-menu a {
+        display: flex;
+        align-items: center;
+        gap: 0.875rem;
+        padding: 1rem;
+        color: var(--text-secondary);
+        text-decoration: none;
+        border-radius: 12px;
+        transition: all 0.3s;
+        font-weight: 500;
+        font-size: 0.95rem;
+      }
+
+      .mobile-nav-menu a i {
+        font-size: 1.1rem;
+        width: 24px;
+        text-align: center;
+      }
+
+      .mobile-nav-menu a:hover {
+        background: var(--bg-glass);
+        color: var(--text-primary);
+        transform: translateX(5px);
+      }
+
+      .mobile-menu-divider {
+        height: 1px;
+        background: var(--border);
+        margin: 1.25rem 0;
+      }
+
+      .mobile-menu-profile {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .mobile-menu-profile button {
+        display: flex;
+        align-items: center;
+        gap: 0.875rem;
+        padding: 1rem;
+        background: transparent;
+        border: none;
+        color: var(--text-secondary);
+        cursor: pointer;
+        border-radius: 12px;
+        transition: all 0.3s;
+        font-weight: 500;
+        font-size: 0.95rem;
+        text-align: left;
+        font-family: inherit;
+      }
+
+      .mobile-menu-profile button:hover {
+        background: var(--bg-glass);
+        color: var(--text-primary);
+        transform: translateX(5px);
+      }
+
+      .mobile-menu-profile button i {
+        font-size: 1.1rem;
+        width: 24px;
+        text-align: center;
+      }
+
+      /* Main Content */
+      .main-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 90px 1rem 1.5rem;
+        position: relative;
+        z-index: 1;
+      }
+
+      .settings-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        animation: fadeInUp 0.6s ease;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(0, 212, 255, 0.2);
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+        backdrop-filter: blur(12px);
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Left Menu - Mobile Optimized */
+      .settings-menu {
+        background: var(--bg-card);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 0.75rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+
+      .settings-menu::-webkit-scrollbar {
+        display: none;
+      }
+
+      .settings-menu ul {
+        list-style: none;
+        display: flex;
+        gap: 0.5rem;
+        min-width: max-content;
+      }
+
+      .settings-menu li {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: var(--text-secondary);
+        font-weight: 500;
+        font-size: 0.85rem;
+        white-space: nowrap;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .settings-menu li::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 3px;
+        background: var(--gradient-1);
+        transform: scaleY(0);
+        transition: transform 0.3s;
+      }
+
+      .settings-menu li:hover {
+        background: var(--bg-glass);
+        color: var(--text-primary);
+      }
+
+      .settings-menu li.active {
+        background: rgba(99, 102, 241, 0.15);
+        color: var(--primary);
+      }
+
+      .settings-menu li.active::before {
+        transform: scaleY(1);
+      }
+
+      .settings-menu li i {
+        font-size: 1rem;
+      }
+
+      /* Right Content - Mobile Optimized */
+      .settings-content {
+        background: var(--bg-card);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.25rem;
+        box-shadow: var(--shadow);
+        min-height: 500px;
+      }
+
+      .tab-content {
+        display: none;
+        animation: fadeIn 0.4s ease;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .tab-content h2 {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.25rem;
+        margin-bottom: 0.25rem;
+        background: var(--gradient-1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .description {
+        color: var(--text-secondary);
+        margin-bottom: 1.25rem;
+        font-size: 0.875rem;
+        line-height: 1.5;
+      }
+
+      /* Form Elements - Mobile Optimized */
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 0.375rem;
+        color: var(--text-secondary);
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="password"] {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        color: var(--text-primary);
+        font-size: 0.9rem;
+        transition: all 0.3s;
+        font-family: 'Inter', sans-serif;
+        -webkit-appearance: none;
+      }
+
+      input[type="text"]:focus,
+      input[type="email"]:focus,
+      input[type="password"]:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+      }
+
+      input::placeholder {
+        color: var(--text-secondary);
+        opacity: 0.5;
+      }
+
+      .password-field {
+        margin-bottom: 1rem;
+      }
+
+      .input-wrapper {
+        position: relative;
+      }
+
+      /* Buttons - Mobile Optimized */
+      .save-btn {
+        background: var(--gradient-1);
+        color: white;
+        border: none;
+        padding: 0.875rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .save-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s;
+      }
+
+      .save-btn:hover::before {
+        left: 100%;
+      }
+
+      .save-btn:active {
+        transform: scale(0.98);
+      }
+
+      .reset-btn {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        padding: 0.875rem 1.25rem;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        width: 100%;
+        justify-content: center;
+      }
+
+      .reset-btn:hover {
+        background: rgba(239, 68, 68, 0.2);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(239, 68, 68, 0.3);
+      }
+
+      .system-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      /* Developer Cards - Mobile Optimized */
+      .developers-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.875rem;
+        margin-top: 1rem;
+      }
+
+      .developer-card {
+        background: var(--bg-glass);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .developer-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--gradient-1);
+        opacity: 0;
+        transition: opacity 0.3s;
+        z-index: 0;
+      }
+
+      .developer-card:hover {
+        transform: translateY(-3px);
+        border-color: var(--primary);
+        box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+      }
+
+      .developer-card:hover::before {
+        opacity: 0.1;
+      }
+
+      .developer-card img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--border);
+        margin-bottom: 0.75rem;
+        position: relative;
+        z-index: 1;
+        transition: all 0.3s;
+      }
+
+      .developer-card:hover img {
+        border-color: var(--primary);
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+      }
+
+      .developer-card h3 {
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        position: relative;
+        z-index: 1;
+        color: var(--text-primary);
+        line-height: 1.3;
+      }
+
+      .developer-card p {
+        font-size: 0.7rem;
+        color: var(--text-secondary);
+        position: relative;
+        z-index: 1;
+      }
+
+      .developer-slots {
+        margin-bottom: 1.5rem;
+      }
+
+      /* Archive Section - Mobile Optimized */
+      .archive-controls {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-bottom: 1.25rem;
+      }
+
+      .archive-search {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        color: var(--text-primary);
+        font-size: 0.9rem;
+        font-family: 'Inter', sans-serif;
+      }
+
+      .archive-search:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+
+      .archive-buttons {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .restore-all-btn, .clear-archive-btn {
+        flex: 1;
+        padding: 0.75rem;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: none;
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.375rem;
+      }
+
+      .restore-all-btn {
+        background: rgba(34, 197, 94, 0.1);
+        color: #22c55e;
+        border: 1px solid rgba(34, 197, 94, 0.3);
+      }
+
+      .restore-all-btn:hover {
+        background: rgba(34, 197, 94, 0.2);
+        transform: translateY(-2px);
+      }
+
+      .clear-archive-btn {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+      }
+
+      .clear-archive-btn:hover {
+        background: rgba(239, 68, 68, 0.2);
+        transform: translateY(-2px);
+      }
+
+      .archive-table-container {
+        overflow-x: auto;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: rgba(15, 23, 42, 0.4);
+        -webkit-overflow-scrolling: touch;
+      }
+
+      table {
+        width: 100%;
+        min-width: 600px;
+        border-collapse: collapse;
+        font-size: 0.8rem;
+      }
+
+      th {
+        background: rgba(99, 102, 241, 0.1);
+        padding: 0.875rem;
+        text-align: left;
+        font-weight: 600;
+        color: var(--text-primary);
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+      }
+
+      td {
+        padding: 0.875rem;
+        border-bottom: 1px solid var(--border);
+        color: var(--text-secondary);
+      }
+
+      tr:hover {
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      /* Checkboxes */
+      input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        border-radius: 6px;
+        border: 2px solid var(--border);
+        background: transparent;
+        cursor: pointer;
+        accent-color: var(--primary);
+        margin-right: 0.5rem;
+      }
+
+      label:has(input[type="checkbox"]) {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        padding: 0.5rem 0;
+        font-size: 0.9rem;
+      }
+
+      /* Modals - Mobile Optimized */
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(10px);
+        z-index: 3000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s;
+        padding: 1rem;
+      }
+
+      .modal.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .modal-content {
+        background: rgba(30, 41, 59, 0.98);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 1.5rem;
+        width: 100%;
+        max-width: 400px;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
+        transform: scale(0.9);
+        transition: transform 0.3s;
+      }
+
+      .modal.active .modal-content {
+        transform: scale(1);
+      }
+
+      .close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: all 0.2s;
+        border-radius: 8px;
+        background: var(--bg-glass);
+        border: none;
+        z-index: 10;
+      }
+
+      .close:hover {
+        background: rgba(239, 68, 68, 0.2);
+        color: #ef4444;
+        transform: rotate(90deg);
+      }
+
+      .developer-info-modal {
+        text-align: center;
+      }
+
+      .dev-modal-image {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid var(--primary);
+        margin-bottom: 1rem;
+        box-shadow: 0 0 30px rgba(99, 102, 241, 0.4);
+      }
+
+      .dev-role {
+        color: var(--primary);
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .dev-bio {
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin-bottom: 1.25rem;
+        font-size: 0.9rem;
+      }
+
+      .close-dev-btn {
+        background: var(--bg-glass);
+        border: 1px solid var(--border);
+        color: var(--text-primary);
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: 600;
+        width: 100%;
+      }
+
+      .close-dev-btn:hover {
+        background: var(--primary);
+        border-color: var(--primary);
+      }
+
+      /* Loading Modal */
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid var(--border);
+        border-top-color: var(--primary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+
+      #loadingText {
+        color: var(--text-secondary);
+        text-align: center;
+        font-size: 0.9rem;
+      }
+
+      /* Confirmation Modal */
+      .buttons {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 1.25rem;
+      }
+
+      .yes-btn, .no-btn {
+        flex: 1;
+        padding: 0.75rem;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: none;
+        font-size: 0.9rem;
+      }
+
+      .yes-btn {
+        background: var(--gradient-1);
+        color: white;
+      }
+
+      .yes-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+      }
+
+      .no-btn {
+        background: var(--bg-glass);
+        color: var(--text-secondary);
+        border: 1px solid var(--border);
+      }
+
+      .no-btn:hover {
+        background: var(--border);
+        color: var(--text-primary);
+      }
+
+      /* Edit Profile Modal */
+      .edit-profile-modal h2 {
+        margin-bottom: 1.25rem;
+        font-size: 1.25rem;
+      }
+
+      .form-buttons {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 1.25rem;
+      }
+
+      .save-profile-btn, .cancel-profile-btn {
+        flex: 1;
+        padding: 0.875rem;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: none;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      .save-profile-btn {
+        background: var(--gradient-1);
+        color: white;
+      }
+
+      .save-profile-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+      }
+
+      .cancel-profile-btn {
+        background: var(--bg-glass);
+        color: var(--text-secondary);
+        border: 1px solid var(--border);
+      }
+
+      .cancel-profile-btn:hover {
+        background: var(--border);
+        color: var(--text-primary);
+      }
+
+      /* Toast Notification */
+      .toast {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%) translateY(100px);
+        background: rgba(30, 41, 59, 0.98);
+        border: 1px solid var(--border);
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        z-index: 4000;
+        opacity: 0;
+        transition: all 0.3s;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        max-width: 90%;
+        width: max-content;
+      }
+
+      .toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      .toast.success {
+        border-color: rgba(34, 197, 94, 0.5);
+        color: #22c55e;
+      }
+
+      .toast.error {
+        border-color: rgba(239, 68, 68, 0.5);
+        color: #ef4444;
+      }
+
+      /* Tablet Styles */
+      @media (min-width: 640px) {
+        .nav-title {
+          display: block;
+        }
+
+        .settings-menu li {
+          padding: 0.875rem 1.25rem;
+          font-size: 0.9rem;
+        }
+
+        .settings-content {
+          padding: 1.5rem;
+        }
+
+        .developers-grid {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 1rem;
+        }
+
+        .developer-card img {
+          width: 70px;
+          height: 70px;
+        }
+
+        .archive-controls {
+          flex-direction: row;
+          flex-wrap: wrap;
+        }
+
+        .archive-search {
+          flex: 1;
+          min-width: 200px;
+        }
+
+        .archive-buttons {
+          flex: 0 0 auto;
+        }
+
+        .restore-all-btn, .clear-archive-btn {
+          padding: 0.75rem 1rem;
+          font-size: 0.85rem;
+        }
+
+        .save-btn, .reset-btn {
+          width: auto;
+        }
+
+        .system-buttons {
+          flex-direction: row;
+        }
+      }
+
+      /* Desktop Styles */
+      @media (min-width: 1024px) {
+        .top-navbar {
+          padding: 0 2rem;
+        }
+
+        .nav-container {
+          height: 70px;
+        }
+
+        .nav-left {
+          gap: 1rem;
+        }
+
+        .admin-info img {
+          width: 40px;
+          height: 40px;
+        }
+
+        .nav-title {
+          font-size: 1.25rem;
+        }
+
+        .nav-menu {
+          display: flex;
+        }
+
+        .mobile-menu-toggle {
+          display: none;
+        }
+
+        .admin-profile-btn {
+          width: 42px;
+          height: 42px;
+          font-size: 1.1rem;
+        }
+
+        .profile-dropdown {
+          top: 55px;
+          right: 0;
+          min-width: 280px;
+        }
+
+        .main-content {
+          padding: 85px 2rem 2rem;
+        }
+
+        .settings-wrapper {
+          display: grid;
+          grid-template-columns: 260px 1fr;
+          gap: 1.5rem;
+        }
+
+        .settings-menu {
+          position: sticky;
+          top: 90px;
+          height: fit-content;
+          padding: 1rem;
+        }
+
+        .settings-menu ul {
+          flex-direction: column;
+          min-width: auto;
+        }
+
+        .settings-menu li {
+          padding: 1rem 1.25rem;
+          font-size: 0.95rem;
+        }
+
+        .settings-menu li::before {
+          width: 3px;
+        }
+
+        .settings-content {
+          padding: 2rem;
+          min-height: 600px;
+        }
+
+        .tab-content h2 {
+          font-size: 1.5rem;
+        }
+
+        .description {
+          font-size: 0.95rem;
+          margin-bottom: 1.5rem;
+        }
+
+        .developers-grid {
+          grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+          gap: 1.25rem;
+        }
+
+        .developer-card {
+          padding: 1.25rem;
+        }
+
+        .developer-card img {
+          width: 80px;
+          height: 80px;
+        }
+
+        .developer-card h3 {
+          font-size: 0.9rem;
+        }
+
+        .developer-card p {
+          font-size: 0.75rem;
+        }
+
+        .archive-controls {
+          flex-wrap: nowrap;
+        }
+
+        .archive-buttons {
+          gap: 0.75rem;
+        }
+
+        .restore-all-btn, .clear-archive-btn {
+          padding: 0.75rem 1.25rem;
+          font-size: 0.9rem;
+        }
+
+        table {
+          font-size: 0.85rem;
+        }
+
+        th, td {
+          padding: 1rem;
+        }
+
+        .modal-content {
+          padding: 2rem;
+          max-width: 450px;
+        }
+
+        .dev-modal-image {
+          width: 120px;
+          height: 120px;
+        }
+      }
+
+      /* Large Desktop */
+      @media (min-width: 1280px) {
+        .settings-wrapper {
+          grid-template-columns: 280px 1fr;
+          gap: 2rem;
+        }
+
+        .developers-grid {
+          grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        }
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--bg-dark);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--primary);
+      }
+
+      /* Touch Device Optimizations */
+      @media (hover: none) {
+        .settings-menu li:hover {
+          transform: none;
+        }
+
+        .developer-card:hover {
+          transform: none;
+        }
+
+        .developer-card:active {
+          transform: scale(0.98);
+        }
+
+        .save-btn:hover::before {
+          left: -100%;
+        }
+
+        .save-btn:active::before {
+          left: 100%;
+        }
+      }
+
+      /* Prevent text selection on UI elements */
+      .settings-menu li, .developer-card, .mobile-nav-menu a, .mobile-menu-profile button {
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      /* Safe area for notched phones */
+      @supports (padding: max(0px)) {
+        .top-navbar {
+          padding-left: max(1rem, env(safe-area-inset-left));
+          padding-right: max(1rem, env(safe-area-inset-right));
+        }
+
+        .main-content {
+          padding-left: max(1rem, env(safe-area-inset-left));
+          padding-right: max(1rem, env(safe-area-inset-right));
+          padding-bottom: max(1rem, env(safe-area-inset-bottom));
+        }
+
+        .mobile-menu-content {
+          padding-top: max(1.5rem, env(safe-area-inset-top));
+          padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="background-container">
+      <!-- TOP NAVBAR -->
+      <nav class="top-navbar">
+        <div class="nav-container">
+          <div class="nav-left">
+            <div class="admin-info">
+              <img src="assets/logo.png" alt="Logo" />
+            </div>
+            <h2 class="nav-title">ADMIN DIGITAL LOGBOOK</h2>
+          </div>
+
+          <ul class="nav-menu">
+            <li>
+              <a href="dashboard.html">
+                <i class="fa-solid fa-chart-simple"></i>
+                <span>Dashboard</span>
+              </a>
+            </li>
+            <li>
+              <a href="student_records.html">
+                <i class="fa-solid fa-users"></i>
+                <span>Student Records</span>
+              </a>
+            </li>
+            <li>
+              <a href="dcp.html">
+                <i class="fa-solid fa-laptop"></i>
+                <span>DCP Package</span>
+              </a>
+            </li>
+            <li>
+              <a href="transaction.html">
+                <i class="fa-solid fa-folder"></i>
+                <span>Transaction</span>
+                <span class="pending-badge" id="navPendingBadge" style="display: none;">1</span>
+              </a>
+            </li>
+            <li>
+              <a href="settings.html" class="active">
+                <i class="fa-solid fa-gear"></i>
+                <span>Settings</span>
+              </a>
+            </li>
+          </ul>
+
+          <div class="nav-controls">
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+              <i class="fas fa-bars"></i>
+            </button>
+            <div class="admin-profile-container">
+              <button class="admin-profile-btn" onclick="toggleProfileDropdown()" title="Admin Profile" aria-label="Profile">
+                <i class="fa-solid fa-user"></i>
+              </button>
+              <div class="profile-dropdown" id="profileDropdown">
+                <div class="profile-header">
+                  <i class="fa-solid fa-circle-user profile-avatar-icon"></i>
+                  <div class="profile-info">
+                    <h3 id="profileUsername">Administrator</h3>
+                    <p id="profileEmail">admin@logbook.com</p>
+                  </div>
+                </div>
+                <button class="profile-menu-item" onclick="showEditProfile()">
+                  <i class="fa-solid fa-user-pen"></i>
+                  <span>Profile</span>
+                </button>
+                <button class="profile-menu-item" onclick="window.location.href='notifications.html'">
+                  <i class="fa-solid fa-bell"></i>
+                  <span>Notifications</span>
+                </button>
+                <button class="profile-menu-item" onclick="window.location.href='settings.html'">
+                  <i class="fa-solid fa-gear"></i>
+                  <span>Settings</span>
+                </button>
+                <button class="profile-menu-item" onclick="logout()">
+                  <i class="fa-solid fa-sign-out-alt"></i>
+                  <span>Logout</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Mobile Menu Overlay -->
+      <div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()">
+        <div class="mobile-menu-content" onclick="event.stopPropagation()">
+          <div class="mobile-menu-header">
+            <h3>Menu</h3>
+            <button class="mobile-menu-close" onclick="closeMobileMenu()" aria-label="Close menu">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <ul class="mobile-nav-menu">
+            <li><a href="dashboard.html" onclick="closeMobileMenu()">
+              <i class="fa-solid fa-chart-simple"></i>
+              <span>Dashboard</span>
+            </a></li>
+            <li><a href="student_records.html" onclick="closeMobileMenu()">
+              <i class="fa-solid fa-users"></i>
+              <span>Student Records</span>
+            </a></li>
+            <li><a href="dcp.html" onclick="closeMobileMenu()">
+              <i class="fa-solid fa-laptop"></i>
+              <span>DCP Package</span>
+            </a></li>
+            <li><a href="transaction.html" onclick="closeMobileMenu()">
+              <i class="fa-solid fa-folder"></i>
+              <span>Transaction</span>
+            </a></li>
+          </ul>
+          <div class="mobile-menu-divider"></div>
+          <div class="mobile-menu-profile">
+            <button onclick="showEditProfile(); closeMobileMenu()">
+              <i class="fas fa-user-pen"></i>
+              <span>Profile</span>
+            </button>
+            <button onclick="window.location.href='notifications.html'">
+              <i class="fas fa-bell"></i>
+              <span>Notifications</span>
+            </button>
+            <button onclick="window.location.href='settings.html'">
+              <i class="fas fa-gear"></i>
+              <span>Settings</span>
+            </button>
+            <button onclick="logout()">
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Logout</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN CONTENT -->
+      <div class="main-content">
+        <div class="settings-wrapper">
+          <!-- Left Menu -->
+          <div class="settings-menu">
+            <ul>
+              <li class="active" onclick="showTab('account', this)">
+                <i class="fas fa-user"></i> Account
+              </li>
+              <li onclick="showTab('password', this)">
+                <i class="fas fa-lock"></i> Password
+              </li>
+              <li onclick="showTab('system', this)">
+                <i class="fas fa-cog"></i> System
+              </li>
+              <li onclick="showTab('developers', this)">
+                <i class="fas fa-code"></i> Developers
+              </li>
+              <li onclick="showTab('archive', this)">
+                <i class="fas fa-archive"></i> Archive
+              </li>
+            </ul>
+          </div>
+
+          <!-- Right Panel -->
+          <div class="settings-content">
+            <!-- Account Info -->
+            <div class="tab-content active" id="account">
+              <h2>Account Information</h2>
+              <p class="description">Manage your account details and preferences</p>
+              
+              <div class="form-group">
+                <label>Username:</label>
+                <input type="text" id="username" placeholder="Admin" />
+              </div>
+              
+              <div class="form-group">
+                <label>Email:</label>
+                <input type="email" id="email" placeholder="admin@email.com" />
+              </div>
+              
+              <button class="save-btn" onclick="saveAccount()">
+                Save Changes
+              </button>
+            </div>
+
+            <!-- Change Password -->
+            <div class="tab-content" id="password">
+              <h2>Change Password</h2>
+              <p class="description">Update your password to keep your account secure</p>
+              
+              <div class="password-field">
+                <label>Current Password:</label>
+                <div class="input-wrapper">
+                  <input type="password" id="currentPass" placeholder="Enter current password" />
+                </div>
+              </div>
+              
+              <div class="password-field">
+                <label>New Password:</label>
+                <div class="input-wrapper">
+                  <input type="password" id="newPass" placeholder="Enter new password" />
+                </div>
+              </div>
+              
+              <div class="password-field">
+                <label>Confirm New Password:</label>
+                <div class="input-wrapper">
+                  <input type="password" id="confirmPass" placeholder="Confirm new password" />
+                </div>
+              </div>
+              
+              <button class="save-btn" onclick="changePassword()">
+                Update Password
+              </button>
+            </div>
+
+            <!-- System -->
+            <div class="tab-content" id="system">
+              <h2>System</h2>
+              <p class="description">You can reset or restore system data here.</p>
+
+              <div class="system-buttons">
+                <button class="reset-btn" onclick="restoreItems()">
+                  <i class="fas fa-rotate"></i> Restore Items
+                </button>
+              </div>
+            </div>
+
+            <!-- Developers -->
+            <div class="tab-content" id="developers">
+              <h2>Development Team</h2>
+              <p class="description">Manage your development team members here.</p>
+
+              <div class="developer-slots" id="developerSlots"></div>
+
+              <h3 style="margin-top: 2rem; margin-bottom: 0.5rem; font-size: 1.1rem; color: var(--primary);">
+                Team Members
+              </h3>
+              <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1rem;">
+                Below are the core developers contributing to the Digital Logbook system:
+              </p>
+              
+              <div class="developers-grid">
+                <div class="developer-card" onclick="showDeveloperInfo('Tracy Doce', 'Developer', 'assets/Tracy.png', 'Full-stack developer specializing in web applications and system architecture.')">
+                  <img src="assets/Tracy.png" alt="Tracy Doce" />
+                  <h3>Tracy Doce</h3>
+                  <p>Developer</p>
+                </div>
+                <div class="developer-card" onclick="showDeveloperInfo('Charm Caithlyn Doce', 'Developer', 'assets/caith.png', 'Frontend developer with expertise in UI/UX design and responsive layouts.')">
+                  <img src="assets/caith.png" alt="Charm Caithlyn Doce" />
+                  <h3>Charm Caithlyn Doce</h3>
+                  <p>Developer</p>
+                </div>
+                <div class="developer-card" onclick="showDeveloperInfo('Rogelio Calano', 'Developer', 'assets/Calano.png', 'Backend developer specializing in database design and API development.')">
+                  <img src="assets/Calano.png" alt="Rogelio Calano" />
+                  <h3>Rogelio Calano</h3>
+                  <p>Developer</p>
+                </div>
+                <div class="developer-card" onclick="showDeveloperInfo('Jhon Lloyd Alegre', 'Developer', 'assets/Lloyd.png', 'Full-stack developer with focus on system integration and performance optimization.')">
+                  <img src="assets/Lloyd.png" alt="Jhon Lloyd Alegre" />
+                  <h3>Jhon Lloyd Alegre</h3>
+                  <p>Developer</p>
+                </div>
+                <div class="developer-card" onclick="showDeveloperInfo('John Eric Alvarez', 'Developer', 'assets/Eric.png', 'Frontend developer experienced in JavaScript frameworks and interactive components.')">
+                  <img src="assets/Eric.png" alt="John Eric Alvarez" />
+                  <h3>John Eric Alvarez</h3>
+                  <p>Developer</p>
+                </div>
+                <div class="developer-card" onclick="showDeveloperInfo('Renz Contreras', 'Developer', 'assets/Renz.png', 'Database and backend specialist with expertise in data management and security.')">
+                  <img src="assets/Renz.png" alt="Renz Contreras" />
+                  <h3>Renz Contreras</h3>
+                  <p>Developer</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Archive -->
+            <div class="tab-content" id="archive">
+              <h2>Transaction Archive</h2>
+              <p class="description">View and manage archived transaction records.</p>
+
+              <div class="archive-controls">
+                <input type="text" id="archiveSearch" placeholder="Search in archive..." class="archive-search" />
+                <div class="archive-buttons">
+                  <button class="restore-all-btn" onclick="restoreAllArchive()">
+                    <i class="fa-solid fa-rotate-left"></i> Restore All
+                  </button>
+                  <button class="clear-archive-btn" onclick="clearAllArchive()">
+                    <i class="fa-solid fa-trash"></i> Clear All
+                  </button>
+                </div>
+              </div>
+
+              <div class="archive-table-container">
+                <table id="archiveTable">
+                  <thead>
+                    <tr>
+                      <th>Borrower ID</th>
+                      <th>Student Name</th>
+                      <th>Item</th>
+                      <th>Quantity</th>
+                      <th>Date Borrowed</th>
+                      <th>Date Returned</th>
+                      <th>Archived Date</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="archiveBody">
+                    <tr id="emptyArchiveRow">
+                      <td colspan="8" style="text-align: center; color: var(--text-secondary); font-style: italic; padding: 2rem;">
+                        No archived records yet.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div id="backupSection"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="editProfileModal" class="modal">
+      <div class="modal-content edit-profile-modal">
+        <button class="close" onclick="closeEditProfileModal()">&times;</button>
+        <h2>Edit Profile</h2>
+        <div class="edit-profile-form">
+          <div class="form-group">
+            <label for="editUsername">Username:</label>
+            <input type="text" id="editUsername" placeholder="Enter username" />
+          </div>
+          <div class="form-group">
+            <label for="editEmail">Email:</label>
+            <input type="email" id="editEmail" placeholder="Enter email" />
+          </div>
+          <div class="form-buttons">
+            <button class="save-profile-btn" onclick="saveProfileChanges()">
+              <i class="fa-solid fa-check"></i> Save
+            </button>
+            <button class="cancel-profile-btn" onclick="closeEditProfileModal()">
+              <i class="fa-solid fa-xmark"></i> Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Modal -->
+    <div id="loadingModal" class="modal">
+      <div class="modal-content" style="max-width: 200px; text-align: center;">
+        <div class="spinner"></div>
+        <p id="loadingText">Processing...</p>
+      </div>
+    </div>
+
+    <!-- Developer Information Modal -->
+    <div id="developerModal" class="modal">
+      <div class="modal-content developer-info-modal">
+        <button class="close" onclick="closeDeveloperModal()">&times;</button>
+        <div class="developer-info-container">
+          <img id="devImage" src="" alt="Developer" class="dev-modal-image" />
+          <h2 id="devName" style="margin-bottom: 0.25rem;"></h2>
+          <p id="devRole" class="dev-role"></p>
+          <p id="devBio" class="dev-bio"></p>
+          <button class="close-dev-btn" onclick="closeDeveloperModal()">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+      <div class="modal-content">
+        <p id="confirmText" style="color: var(--text-primary); font-size: 1rem; line-height: 1.5;"></p>
+        <div class="buttons">
+          <button id="confirmYes" class="yes-btn">Yes</button>
+          <button id="confirmNo" class="no-btn">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+      <i class="fas fa-check-circle"></i>
+      <span id="toastMessage">Operation successful</span>
+    </div>
+
+    <script>
+      // Tab Navigation
+      function showTab(tabName, element) {
+        // Hide all tabs
+        document.querySelectorAll('.tab-content').forEach(tab => {
+          tab.classList.remove('active');
+        });
+        
+        // Remove active class from menu items
+        document.querySelectorAll('.settings-menu li').forEach(item => {
+          item.classList.remove('active');
+        });
+        
+        // Show selected tab
+        document.getElementById(tabName).classList.add('active');
+        
+        // Add active class to clicked menu item
+        if (element) {
+          element.classList.add('active');
+        }
+      }
+
+      // Profile Dropdown
+      function toggleProfileDropdown() {
+        const dropdown = document.getElementById('profileDropdown');
+        dropdown.classList.toggle('active');
+      }
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function(event) {
+        const container = document.querySelector('.admin-profile-container');
+        const dropdown = document.getElementById('profileDropdown');
+        
+        if (!container.contains(event.target)) {
+          dropdown.classList.remove('active');
+        }
+      });
+
+      // Mobile Menu
+      function toggleMobileMenu() {
+        const overlay = document.getElementById('mobileMenuOverlay');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeMobileMenu() {
+        const overlay = document.getElementById('mobileMenuOverlay');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      // Edit Profile Modal
+      function showEditProfile() {
+        const modal = document.getElementById('editProfileModal');
+        modal.style.display = 'flex';
+        setTimeout(() => modal.classList.add('active'), 10);
+      }
+
+      function closeEditProfileModal() {
+        const modal = document.getElementById('editProfileModal');
+        modal.classList.remove('active');
+        setTimeout(() => {
+          modal.style.display = 'none';
+        }, 300);
+      }
+
+      function saveProfileChanges() {
+        showToast('Profile updated successfully', 'success');
+        closeEditProfileModal();
+      }
+
+      // Developer Modal
+      function showDeveloperInfo(name, role, image, bio) {
+        document.getElementById('devName').textContent = name;
+        document.getElementById('devRole').textContent = role;
+        document.getElementById('devImage').src = image;
+        document.getElementById('devBio').textContent = bio;
+        
+        const modal = document.getElementById('developerModal');
+        modal.style.display = 'flex';
+        setTimeout(() => modal.classList.add('active'), 10);
+      }
+
+      function closeDeveloperModal() {
+        const modal = document.getElementById('developerModal');
+        modal.classList.remove('active');
+        setTimeout(() => {
+          modal.style.display = 'none';
+        }, 300);
+      }
+
+      // Toast Notification
+      function showToast(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+        const icon = toast.querySelector('i');
+        
+        toastMessage.textContent = message;
+        toast.className = `toast ${type}`;
+        
+        if (type === 'success') {
+          icon.className = 'fas fa-check-circle';
+        } else {
+          icon.className = 'fas fa-exclamation-circle';
+        }
+        
+        toast.classList.add('show');
+        
+        setTimeout(() => {
+          toast.classList.remove('show');
+        }, 3000);
+      }
+
+      // Loading Modal
+      function showLoading(text = 'Processing...') {
+        const modal = document.getElementById('loadingModal');
+        document.getElementById('loadingText').textContent = text;
+        modal.style.display = 'flex';
+        setTimeout(() => modal.classList.add('active'), 10);
+      }
+
+      function hideLoading() {
+        const modal = document.getElementById('loadingModal');
+        modal.classList.remove('active');
+        setTimeout(() => {
+          modal.style.display = 'none';
+        }, 300);
+      }
+
+      // Confirmation Modal
+      function showConfirm(text, onYes) {
+        const modal = document.getElementById('confirmModal');
+        document.getElementById('confirmText').textContent = text;
+        
+        modal.style.display = 'flex';
+        setTimeout(() => modal.classList.add('active'), 10);
+        
+        document.getElementById('confirmYes').onclick = function() {
+          closeConfirm();
+          if (onYes) onYes();
+        };
+        
+        document.getElementById('confirmNo').onclick = closeConfirm;
+      }
+
+      function closeConfirm() {
+        const modal = document.getElementById('confirmModal');
+        modal.classList.remove('active');
+        setTimeout(() => {
+          modal.style.display = 'none';
+        }, 300);
+      }
+
+      // Close modals on outside click
+      window.onclick = function(event) {
+        if (event.target.classList.contains('modal')) {
+          const modal = event.target;
+          modal.classList.remove('active');
+          setTimeout(() => {
+            modal.style.display = 'none';
+          }, 300);
+        }
+      }
+
+      // Action Functions
+      function saveAccount() {
+        showLoading('Saving changes...');
+        setTimeout(() => {
+          hideLoading();
+          showToast('Account saved successfully!');
+        }, 1000);
+      }
+
+      function changePassword() {
+        const current = document.getElementById('currentPass').value;
+        const newPass = document.getElementById('newPass').value;
+        const confirm = document.getElementById('confirmPass').value;
+        
+        if (!current || !newPass || !confirm) {
+          showToast('Please fill in all fields', 'error');
+          return;
+        }
+        
+        if (newPass !== confirm) {
+          showToast('Passwords do not match', 'error');
+          return;
+        }
+        
+        showLoading('Updating password...');
+        setTimeout(() => {
+          hideLoading();
+          showToast('Password changed successfully!');
+          document.getElementById('currentPass').value = '';
+          document.getElementById('newPass').value = '';
+          document.getElementById('confirmPass').value = '';
+        }, 1000);
+      }
+
+      function restoreItems() {
+        showConfirm('Are you sure you want to restore all items?', function() {
+          showLoading('Restoring items...');
+          setTimeout(() => {
+            hideLoading();
+            showToast('Items restored successfully!');
+          }, 1500);
+        });
+      }
+
+      function restoreAllArchive() {
+        showConfirm('Are you sure you want to restore all archived items?', function() {
+          showLoading('Restoring archive...');
+          setTimeout(() => {
+            hideLoading();
+            showToast('All items restored from archive!');
+          }, 1500);
+        });
+      }
+
+      function clearAllArchive() {
+        showConfirm('Are you sure you want to clear all archive? This cannot be undone.', function() {
+          showLoading('Clearing archive...');
+          setTimeout(() => {
+            hideLoading();
+            showToast('Archive cleared successfully!');
+          }, 1500);
+        });
+      }
+
+      function logout() {
+        showConfirm('Are you sure you want to logout?', function() {
+          showLoading('Logging out...');
+          setTimeout(() => {
+            window.location.href = 'login.html';
+          }, 1000);
+        });
+      }
+
+      // Search functionality
+      document.getElementById('archiveSearch')?.addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const rows = document.querySelectorAll('#archiveBody tr:not(#emptyArchiveRow)');
+        
+        rows.forEach(row => {
+          const text = row.textContent.toLowerCase();
+          row.style.display = text.includes(searchTerm) ? '' : 'none';
+        });
+      });
+
+      // Handle escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          closeMobileMenu();
+          document.querySelectorAll('.modal.active').forEach(modal => {
+            modal.classList.remove('active');
+            setTimeout(() => {
+              modal.style.display = 'none';
+            }, 300);
+          });
+        }
+      });
+
+      // Prevent zoom on double tap for iOS
+      let lastTouchEnd = 0;
+      document.addEventListener('touchend', function(e) {
+        const now = Date.now();
+        if (now - lastTouchEnd <= 300) {
+          e.preventDefault();
+        }
+        lastTouchEnd = now;
+      }, false);
+    </script>
+  </body>
+</html>
